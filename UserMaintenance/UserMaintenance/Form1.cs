@@ -15,6 +15,7 @@ namespace UserMaintenance
     public partial class Form1 : Form
     {
         BindingList<User> users = new BindingList<User>();
+        public int selectedID;
         public Form1()
         {
             InitializeComponent();
@@ -26,6 +27,7 @@ namespace UserMaintenance
             listBox1.DisplayMember = "FullName";
 
             button2.Text = Resource1.FileOutput;
+            button3.Text = Resource1.Delete;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -55,5 +57,26 @@ namespace UserMaintenance
                 }
             }
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            //lis
+            try
+            {
+                selectedID = listBox1.SelectedIndex;
+                int counter = 0;
+                foreach (var us in users)
+                {
+                    if (selectedID==counter)
+                    {
+                        users.Remove(us);
+                    }
+                    counter++;
+                }
+            }
+            catch (Exception){}
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e){}
     }
 }
