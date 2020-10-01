@@ -61,23 +61,23 @@ namespace ExcelExport_Task
                  "Ár (mFt)",
                  "Négyzetméter ár (Ft/m2)"
             };
-            for (int i = 1; i < 10; i++)
+            for (int i = 0; i < 9; i++)
             {
-                xlSheet.Cells[1, i] = header[i];
+                xlSheet.Cells[1, i+1] = header[i];
             }
             object[,] values = new object[Flats.Count, header.Length];
             int counter = 0;
             foreach (Flat f in Flats)
             {
                 values[counter, 0] = f.Code;
-                values[counter, 1] = f.Code;
-                values[counter, 2] = f.Code;
-                values[counter, 3] = f.Code;
-                values[counter, 4] = f.Code;
-                values[counter, 5] = f.Code;
-                values[counter, 6] = f.Code;
-                values[counter, 7] = f.Code;
-                values[counter, 8] = "";
+                values[counter, 1] = f.Vendor;
+                values[counter, 2] = f.Side;
+                values[counter, 3] = f.District;
+                values[counter, 4] = f.Elevator;
+                values[counter, 5] = f.NumberOfRooms;
+                values[counter, 6] = f.FloorArea;
+                values[counter, 7] = f.Price;
+                values[counter, 8] = "="+GetCell(counter+2,8)+"/"+GetCell(counter+2,7);
                 counter++;
             }
             xlSheet.get_Range(GetCell(2,1),
