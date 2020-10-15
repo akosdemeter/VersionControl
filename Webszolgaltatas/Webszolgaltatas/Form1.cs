@@ -17,9 +17,23 @@ namespace Webszolgaltatas
     public partial class Form1 : Form
     {
         BindingList<RateDate> rates = new BindingList<RateDate>();
+        BindingList<String> Currency = new BindingList<String>();
         public Form1()
         {
             InitializeComponent();
+            comboBox1.DataSource = Currency;
+            var mnbService2 = new MNBArfolyamServiceSoapClient();
+            var request2 = new GetCurrenciesRequestBody();
+            var response2 = mnbService2.GetCurrencies(request2);
+            var result2 = response2.GetCurrenciesResult;
+            XmlDocument xml2 = new XmlDocument();
+            xml2.LoadXml(result2);
+            foreach (XmlElement element2 in xml2.DocumentElement)
+            {
+                string curren = "";
+                Currency.Add(curren);
+                curren = 
+            }
             RefreshData();
         }
 
@@ -35,7 +49,7 @@ namespace Webszolgaltatas
             var mnbService = new MNBArfolyamServiceSoapClient();
             var request = new GetExchangeRatesRequestBody()
             {
-                currencyNames = comboBox1.Text.ToString(),
+                currencyNames = comboBox1.Items.ToString(),
                 startDate = dateTimePicker1.Text.ToString(),
                 endDate = dateTimePicker2.Text.ToString()
             };
