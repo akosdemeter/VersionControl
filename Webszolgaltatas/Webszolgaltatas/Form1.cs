@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml;
 using Webszolgaltatas.Entities;
 using Webszolgaltatas.MnbServiceReference;
@@ -21,7 +22,7 @@ namespace Webszolgaltatas
             InitializeComponent();
             dataGridView1.DataSource = rates;
             GettingResults();
-            XmlFeldolgoz();
+            ShowChart();
         }
         public void GettingResults() {
             var mnbService = new MNBArfolyamServiceSoapClient();
@@ -44,16 +45,25 @@ namespace Webszolgaltatas
                 rate.Date = DateTime.Parse(element.GetAttribute("date"));
                 var childelement = (XmlElement)element.ChildNodes[0];
                 rate.Currency = childelement.GetAttribute("curr");
-                var unit = decimal.Parse(element.GetAttribute("unit"));
-                var value = decimal.Parse(element.InnerText);
+                var unit = decimal.Parse(childelement.GetAttribute("unit"));
+                var value = decimal.Parse(childelement.InnerText);
                 if (unit!=0)
                 {
                     rate.Value = value / unit;
                 }
             }
         }
-        public void XmlFeldolgoz() {
-            
+        public void ShowChart() {
+            chartRateData.DataSource = rates;
+            var series = chartRateData.Series[0];
+            series.ChartType = SeriesChartType.Line;
+            series.XValueMember = "Date";
+            series.YValueMembers = "Value";
+            series.BorderWidth = 2;
+            chartRateData.Legends[0].Enabled = false;
+            chartRateData.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
+            chartRateData.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
+            chartRateData.ChartAreas[0].AxisY.IsStartedFromZero = false;
         }
     }
 }
