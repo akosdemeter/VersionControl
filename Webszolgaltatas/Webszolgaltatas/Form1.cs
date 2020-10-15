@@ -20,17 +20,24 @@ namespace Webszolgaltatas
         public Form1()
         {
             InitializeComponent();
+            RefreshData();
+        }
+
+        private void RefreshData()
+        {
+            rates.Clear();
             dataGridView1.DataSource = rates;
             GettingResults();
             ShowChart();
         }
+
         public void GettingResults() {
             var mnbService = new MNBArfolyamServiceSoapClient();
             var request = new GetExchangeRatesRequestBody()
             {
-                currencyNames = "EUR",
-                startDate = "2020-01-01",
-                endDate = "2020-06-30"
+                currencyNames = comboBox1.Text.ToString(),
+                startDate = dateTimePicker1.Text.ToString(),
+                endDate = dateTimePicker2.Text.ToString()
             };
             var response = mnbService.GetExchangeRates(request);
             var result = response.GetExchangeRatesResult;
@@ -64,6 +71,21 @@ namespace Webszolgaltatas
             chartRateData.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
             chartRateData.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
             chartRateData.ChartAreas[0].AxisY.IsStartedFromZero = false;
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
+
+        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshData();
         }
     }
 }
