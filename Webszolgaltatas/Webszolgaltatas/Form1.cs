@@ -21,7 +21,7 @@ namespace Webszolgaltatas
         public Form1()
         {
             InitializeComponent();
-            comboBox1.DataSource = Currency;
+            RefreshData();
             var mnbService2 = new MNBArfolyamServiceSoapClient();
             var request2 = new GetCurrenciesRequestBody();
             var response2 = mnbService2.GetCurrencies(request2);
@@ -32,9 +32,15 @@ namespace Webszolgaltatas
             {
                 string curren = "";
                 Currency.Add(curren);
-                curren = 
+                var childelement2 = (XmlElement)element2.ChildNodes[0];
+                if (childelement2==null)
+                {
+                    continue;
+                }
+                curren = childelement2.GetAttribute("curr");
             }
-            RefreshData();
+            comboBox1.DataSource = Currency;
+            
         }
 
         private void RefreshData()
@@ -50,8 +56,8 @@ namespace Webszolgaltatas
             var request = new GetExchangeRatesRequestBody()
             {
                 currencyNames = comboBox1.Items.ToString(),
-                startDate = dateTimePicker1.Text.ToString(),
-                endDate = dateTimePicker2.Text.ToString()
+                startDate = dateTimePicker1.Value.Date.ToString("yyyy-MM-dd"),
+                endDate = dateTimePicker2.Value.Date.ToString("yyyy-MM-dd")
             };
             var response = mnbService.GetExchangeRates(request);
             var result = response.GetExchangeRatesResult;
@@ -65,6 +71,10 @@ namespace Webszolgaltatas
 
                 rate.Date = DateTime.Parse(element.GetAttribute("date"));
                 var childelement = (XmlElement)element.ChildNodes[0];
+                if (childelement==null)
+                {
+                    continue;
+                }
                 rate.Currency = childelement.GetAttribute("curr");
                 var unit = decimal.Parse(childelement.GetAttribute("unit"));
                 var value = decimal.Parse(childelement.InnerText);
