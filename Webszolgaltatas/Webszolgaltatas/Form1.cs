@@ -17,45 +17,59 @@ namespace Webszolgaltatas
     public partial class Form1 : Form
     {
         BindingList<RateDate> rates = new BindingList<RateDate>();
-        BindingList<String> Currency = new BindingList<String>();
+        //BindingList<CurrencyClass> Cur = new BindingList<CurrencyClass>();
+        BindingList<String> currency = new BindingList<String>();
+        String curren = "";
         public Form1()
         {
             InitializeComponent();
+            dataGridView1.DataSource = rates;
+            GetCurren();
+            comboBox1.DataSource = currency;
+            //comboBox1.DisplayMember = "Currencies";
+            //comboBox1.ValueMember = "Currencies";
             RefreshData();
-            var mnbService2 = new MNBArfolyamServiceSoapClient();
-            var request2 = new GetCurrenciesRequestBody();
-            var response2 = mnbService2.GetCurrencies(request2);
-            var result2 = response2.GetCurrenciesResult;
-            XmlDocument xml2 = new XmlDocument();
-            xml2.LoadXml(result2);
-            foreach (XmlElement element2 in xml2.DocumentElement)
+            Console.WriteLine();
+        }
+
+        public void GetCurren()
+        {
+            var mnbService = new MNBArfolyamServiceSoapClient();
+            var request = new GetCurrenciesRequestBody();
+            var response = mnbService.GetCurrencies(request);
+            var result = response.GetCurrenciesResult;
+            richTextBox1.Visible = true;
+            richTextBox1.Text = result;
+            XmlDocument xml = new XmlDocument();
+            xml.LoadXml(result);
+            foreach (XmlElement element in xml.DocumentElement)
             {
-                string curren = "";
-                Currency.Add(curren);
-                var childelement2 = (XmlElement)element2.ChildNodes[0];
-                if (childelement2==null)
+                //var curren = new CurrencyClass();
+                //Cur.Add(curren);
+                var childelement = (XmlElement)element.ChildNodes[0];
+                if (childelement == null)
                 {
                     continue;
                 }
-                curren = childelement2.GetAttribute("curr");
+                //curren.Currencies = childelement.GetAttribute("Curr");
+                curren = childelement.GetAttribute("Curr");
+                currency.Add(curren);
             }
-            comboBox1.DataSource = Currency;
-            
         }
 
         private void RefreshData()
         {
             rates.Clear();
-            dataGridView1.DataSource = rates;
             GettingResults();
             ShowChart();
+            dataGridView1.DataSource = rates;
         }
 
         public void GettingResults() {
             var mnbService = new MNBArfolyamServiceSoapClient();
             var request = new GetExchangeRatesRequestBody()
             {
-                currencyNames = comboBox1.Items.ToString(),
+                currencyNames = comboBox1.SelectedItem.ToString(),
                 startDate = dateTimePicker1.Value.Date.ToString("yyyy-MM-dd"),
                 endDate = dateTimePicker2.Value.Date.ToString("yyyy-MM-dd")
             };
@@ -71,7 +85,7 @@ namespace Webszolgaltatas
 
                 rate.Date = DateTime.Parse(element.GetAttribute("date"));
                 var childelement = (XmlElement)element.ChildNodes[0];
-                if (childelement==null)
+                if (childelement == null)
                 {
                     continue;
                 }
