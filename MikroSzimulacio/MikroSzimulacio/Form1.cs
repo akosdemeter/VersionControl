@@ -23,6 +23,7 @@ namespace MikroSzimulacio
             Population = GetPopulation(@"C:\Hivatalos_dok\nép.csv");
             BirthProbs = GetBirthProb(@"C:\Hivatalos_dok\születés.csv");
             DeathProbs = GetDeathProb(@"C:\Hivatalos_dok\halál.csv");
+            dataGridView1.DataSource = DeathProbs;
         }
         public List<Person> GetPopulation(string csvpath){
             List<Person> population = new List<Person>();
