@@ -129,9 +129,9 @@ namespace MikroSzimulacio
         private void DisplayResults() {
             for (int years = 2005; years < numericUpDown1.Value; years++)
             {
-                richTextBox1.Text += ("Szimulációs év: {0} \n \t Fiúk: {1} \n \t " +
-                                      "Lányok: {2} \n \n", years, NbrOfMalesInYears[years-2005],
-                                       NbrOfFemalesInYears[years-2005]);
+                richTextBox1.Text += "Szimulációs év: " + years + "\n \t Fiúk: " +
+                                      NbrOfMalesInYears[years - 2005] + "\n \t Lányok: " +
+                                      NbrOfFemalesInYears[years - 2005] + "\n \n";
             }
         }
         private void button1_Click(object sender, EventArgs e)
