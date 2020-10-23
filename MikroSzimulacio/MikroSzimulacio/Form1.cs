@@ -29,7 +29,7 @@ namespace MikroSzimulacio
             {
                 for (int j = 0; j < Population.Count; j++)
                 {
-
+                    SimStep(i,Population[j]);
                 }
                 int NbrOfMales = (from x in Population where x.Gender == Gender.Male 
                                   && x.IsAlive select x).Count();
@@ -90,6 +90,28 @@ namespace MikroSzimulacio
                 }
             }
             return deathProbs;
+        }
+        private void SimStep(int year, Person person) {
+            if (!person.IsAlive) return;
+            int age = (int)(year - person.BirthDate);
+            double pDeath = (from x in DeathProbs
+                             where x.Gender == person.Gender && x.Age == age
+                             select x.P).FirstOrDefault();
+            if (rng.NextDouble() <= pDeath) person.IsAlive = false;
+            if (person.IsAlive && person.Gender == Gender.Female)
+            {
+                double pBirth = (from x in BirthProbs
+                                 where x.Age == age
+                                 select x.P).FirstOrDefault();
+                if (rng.NextDouble() <= pBirth)
+                {
+                    Person ujszulott = new Person();
+                    ujszulott.BirthDate = year;
+                    ujszulott.NbrOfChildren = 0;
+                    ujszulott.Gender = (Gender)(rng.Next(1, 3));
+                    Population.Add(ujszulott);
+                }
+            }
         }
     }
 }
